@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "SafariRest.API Debug",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "buildapi",
+      "program": "${workspaceFolder}/SafariRest.API/bin/Debug/net8.0/SafariRest.API.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/SafariRest.API",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+https://\\S+:([0-9]+)",
+        "uriFormat": "https://localhost:%s/swagger/index.html"
+      },
+      "internalConsoleOptions": "openOnSessionStart",
+      "launchBrowser": {
+        "enabled": false,
+        "args": "${auto-detect-url}",
+        "windows": {
+          "command": "cmd.exe",
+          "args": "/C start ${auto-detect-url}"
+        },
+        "osx": {
+          "command": "open"
+        },
+        "linux": {
+          "command": "xdg-open"
+        }
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  ]
+}

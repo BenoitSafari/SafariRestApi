@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "buildapi",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/SafariRest.API/SafariRest.API.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/SafariRest.API/SafariRest.API.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "${workspaceFolder}/SafariRest.API/SafariRest.API.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

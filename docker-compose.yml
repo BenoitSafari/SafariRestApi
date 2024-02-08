@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: safari_postgres
+    image: postgres:16.1
+    env_file:
+      - .env
+    ports:
+      - 7432:5432
+    restart: always
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
