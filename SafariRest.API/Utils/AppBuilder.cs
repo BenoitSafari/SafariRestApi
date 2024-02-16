@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SafariRest.Database.Context;
-using SafariRest.Database.Utils;
 
 namespace SafariRest.API.Utils;
 
@@ -28,14 +27,20 @@ public class AppBuilder
     {
         var cfg = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
+            .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
 
         return cfg.Build();
     }
 
     private void SetDatabase()
     {
-        var connStr = ConnectionString.GetConnectionString(Config);
+        var connStr =
+            Config.GetConnectionString("Default")
+            ?? throw new InvalidOperationException(
+                "No connection string found in appsettings files"
+            );
+
         Builder.Services.AddDbContext<MainContext>(opts =>
             opts.UseNpgsql(connStr, o => o.MigrationsAssembly("SafariRest.Database"))
         );

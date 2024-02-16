@@ -2,17 +2,14 @@
 
 ### Env
 
-_Create a `appsettings.Development.json` file in the `<project>.API` project._
+_Export the following environment variables to override server configuration_
 
-```json
-{
-  "ConnectionStrings": {
-    "Default": "Host=localhost;Database=<db_name>;Username=<db_user>;Password=<db_password>;Port=<port>",
-  },
-  "AllowedHosts": "*",
-  "CorsAllowedOrigins": ["http://localhost:3000"],
-  "passwordRegex": "^(?=.*[A-Z])(?=.*[!#$%*+=?|\\-])(?=.*\\d)[!#$%*+=?|\\-A-Za-z\\d]{12,}$"
-}
+```
+ConnectionStrings__Default="Host=localhost;Port=5432;Database=database;Username=username;Password=password"
+
+AuthenticationConfig__Secret=secret
+AuthenticationConfig__RefreshExpiration=86400000
+AuthenticationConfig__AccessExpiration=900000
 ```
 
 ### Recommended VSCode extensions
