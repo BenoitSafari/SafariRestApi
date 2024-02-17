@@ -3,10 +3,8 @@
 using Microsoft.EntityFrameworkCore;
 using SafariRest.Database.Models;
 
-public class MainContext : DbContext
+public class MainContext(DbContextOptions<MainContext> options) : DbContext(options)
 {
-    public MainContext(DbContextOptions<MainContext> options)
-        : base(options) { }
-
     public DbSet<User> Users { get; set; }
+    public DbSet<Admin> Admins { get; set; }
 }

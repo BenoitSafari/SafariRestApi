@@ -42,7 +42,7 @@ public class AppBuilder
             );
 
         Builder.Services.AddDbContext<MainContext>(opts =>
-            opts.UseNpgsql(connStr, o => o.MigrationsAssembly("SafariRest.Database"))
+            opts.UseNpgsql(connStr, b => b.MigrationsAssembly("SafariRest.Database"))
         );
     }
 
