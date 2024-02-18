@@ -6,6 +6,6 @@ namespace SafariRest.API.Controllers;
 [Route("/")]
 public class RootController : ControllerBase
 {
-    [HttpGet("ping")]
+    [HttpGet("/")]
     public IActionResult Get() => Ok("Pong");
 }
