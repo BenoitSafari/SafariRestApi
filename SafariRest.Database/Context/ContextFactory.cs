@@ -7,7 +7,7 @@ namespace SafariRest.Database;
 
 public class ContextFactory : IDesignTimeDbContextFactory<MainContext>
 {
-    private readonly string Env =
+    private static readonly string Env =
         Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 
     public MainContext CreateDbContext(string[] args)
@@ -19,7 +19,7 @@ public class ContextFactory : IDesignTimeDbContextFactory<MainContext>
         return new MainContext(optionsBuilder.Options);
     }
 
-    private string GetConnectionString(string[]? args)
+    private static string GetConnectionString(string[]? args)
     {
         if (args is not null && args.Length > 0)
             return args[0];
