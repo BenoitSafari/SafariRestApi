@@ -3,56 +3,47 @@ using SafariRest.Database.Context;
 
 namespace SafariRest.API.Utils;
 
-public class AppBuilder
+public static class AppBuilder
 {
-    private readonly WebApplicationBuilder Builder;
-    private readonly IConfiguration Config;
-
-    public AppBuilder(string[] args)
+    public static WebApplication Build(string[] args)
     {
-        Builder = WebApplication.CreateBuilder(args);
-        var env = Builder.Environment.EnvironmentName;
-        Config = InitConfig(env);
-        AddControllers();
-        SetSwaggerGen();
-        SetCorsPolicy();
-        SetDatabase();
+        var builder = WebApplication.CreateBuilder(args);
+        builder.SetEnvironment();
+        builder.AddControllers();
+        builder.SetSwaggerGen();
+        builder.SetCorsPolicy();
+        builder.SetDatabase();
+        builder.Services.InjectRepositories();
+        builder.Services.InjectServices();
+        return builder.Build();
     }
 
-    public WebApplication BuildApp() => Builder.Build();
-
-    public IConfiguration GetConfig() => Config;
-
-    private static IConfiguration InitConfig(string env)
+    private static void SetEnvironment(this WebApplicationBuilder builder)
     {
-        var cfg = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        var env = builder.Environment.EnvironmentName;
+        builder
+            .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
-
-        return cfg.Build();
     }
 
-    private void SetDatabase()
+    private static void SetDatabase(this WebApplicationBuilder builder)
     {
         var connStr =
-            Config.GetConnectionString("Default")
+            builder.Configuration.GetConnectionString("Default")
             ?? throw new InvalidOperationException(
                 "No connection string found in appsettings files"
             );
 
-        Builder.Services.AddDbContext<MainContext>(opts =>
+        builder.Services.AddDbContext<MainContext>(opts =>
             opts.UseNpgsql(connStr, b => b.MigrationsAssembly("SafariRest.Database"))
         );
     }
 
-    private void SetCorsPolicy()
+    private static void SetCorsPolicy(this WebApplicationBuilder builder)
     {
-        var origins =
-            Config.GetSection("CorsAllowedOrigins").Get<string[]>()
-            ?? throw new InvalidOperationException("No allowed origins found in appsettings files");
-
-        Builder.Services.AddCors(opts =>
+        var origins = builder.Configuration.GetCorsAllowedOrigins();
+        builder.Services.AddCors(opts =>
         {
             opts.AddDefaultPolicy(builder =>
             {
@@ -61,19 +52,16 @@ public class AppBuilder
         });
     }
 
-    private void SetSwaggerGen() =>
-        Builder.Services.AddSwaggerGen(opts =>
+    private static void SetSwaggerGen(this WebApplicationBuilder builder) =>
+        builder.Services.AddSwaggerGen(opts =>
         {
-            opts.SwaggerDoc(
-                "v1",
-                new()
-                {
-                    Title = "SafariRest.API",
-                    Description = $"Built on {DateTime.Now}",
-                    Version = "v1"
-                }
-            );
+            opts.SwaggerDoc("v1", new() { Title = "SafariRest.API", Version = "v1" });
         });
 
-    private void AddControllers() => Builder.Services.AddControllers();
+    private static void AddControllers(this WebApplicationBuilder builder) =>
+        builder.Services.AddControllers();
+
+    private static string[] GetCorsAllowedOrigins(this ConfigurationManager config) =>
+        config.GetSection("CorsAllowedOrigins").Get<string[]>()
+        ?? throw new InvalidOperationException("No allowed origins found in appsettings files");
 }

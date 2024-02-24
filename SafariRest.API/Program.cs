@@ -6,8 +6,7 @@ internal sealed class Program
 {
     private static async Task Main(string[] args)
     {
-        var builder = new AppBuilder(args);
-        var app = builder.BuildApp();
+        var app = AppBuilder.Build(args);
 
         RegisterServices(app);
         await ApplyDataMigrationsAsync(app);
