@@ -7,5 +7,11 @@ namespace SafariRest.API.Controllers;
 public class RootController : ControllerBase
 {
     [HttpGet("/")]
-    public IActionResult Get() => Ok("Pong");
+    public IActionResult GetApiState()
+    {
+        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        var version = assembly.GetName().Version;
+        var name = assembly.GetName().Name;
+        return Ok(new { name, version });
+    }
 }

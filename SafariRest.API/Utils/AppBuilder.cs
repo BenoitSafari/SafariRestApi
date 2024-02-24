@@ -13,6 +13,8 @@ public static class AppBuilder
         builder.SetSwaggerGen();
         builder.SetCorsPolicy();
         builder.SetDatabase();
+        builder.Services.InjectRepositories();
+        builder.Services.InjectServices();
         return builder.Build();
     }
 
